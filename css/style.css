@@ -232,18 +232,15 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(56px, 13vw, 220px);
-  line-height: 0.9;
+  line-height: 1.05;
   letter-spacing: -0.025em;
   margin-bottom: clamp(20px, 3vw, 36px);
 }
 .hero-title .line {
   display: block;
-  overflow: hidden;
-}
-.hero-title .line > * { display: inline-block; }
-.hero-title .line {
+  padding-bottom: 0.06em;
   opacity: 0;
-  transform: translateY(60%);
+  transform: translateY(40px);
   animation: fadeUp var(--t-slow) 0.55s forwards;
 }
 .hero-title .line.italic {

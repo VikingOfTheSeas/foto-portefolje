@@ -33,22 +33,23 @@
     links.classList.remove('open');
   }));
 
-  /* ----- Cursor (desktop only) ----- */
+  /* ----- Cursor (desktop only). Direct positioning, no rAF loop. ----- */
   if (matchMedia('(pointer: fine)').matches) {
     const cursor = $('#cursor');
-    let x = innerWidth / 2, y2 = innerHeight / 2;
-    let cx = x, cy = y2;
-    document.addEventListener('mousemove', e => { x = e.clientX; y2 = e.clientY; cursor.classList.add('show'); });
+    let pending = false;
+    let lastX = 0, lastY = 0;
+    document.addEventListener('mousemove', e => {
+      lastX = e.clientX; lastY = e.clientY;
+      cursor.classList.add('show');
+      if (!pending) {
+        pending = true;
+        requestAnimationFrame(() => {
+          cursor.style.transform = `translate(${lastX}px, ${lastY}px) translate(-50%, -50%)`;
+          pending = false;
+        });
+      }
+    }, { passive: true });
     document.addEventListener('mouseleave', () => cursor.classList.remove('show'));
-
-    const tick = () => {
-      cx += (x - cx) * 0.18;
-      cy += (y2 - cy) * 0.18;
-      cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-      requestAnimationFrame(tick);
-    };
-    tick();
-
     document.addEventListener('mouseover', e => {
       const t = e.target.closest('a, button, .g-item');
       cursor.classList.toggle('hover', !!t);
@@ -82,21 +83,7 @@
     });
   });
 
-  /* ----- Hero parallax ----- */
-  const heroImg = $('.hero-img');
-  if (heroImg) {
-    let ticking = false;
-    document.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const y3 = Math.min(window.scrollY, 800);
-          heroImg.style.transform = `translateY(${y3 * 0.25}px) scale(${1 + y3 * 0.00015})`;
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-  }
+  /* Hero parallax fjernet bevisst — den forårsaket lag på scroll. */
 
   /* ----- Lightbox ----- */
   const lb     = $('#lightbox');

@@ -95,26 +95,74 @@
   const lbImg  = $('#lbImg');
   const lbCap  = $('#lbCap');
   const lbCnt  = $('#lbCount');
+  const stage  = $('.lb-stage');
   const items  = $$('.g-item');
 
   let currentIdx = -1;
 
-  const openLB = (i) => {
+  /* Cache for forhåndslastede bilder. */
+  const preloaded = new Set();
+  const preload = (src) => {
+    if (!src || preloaded.has(src)) return;
+    preloaded.add(src);
+    const img = new Image();
+    img.src = src;
+  };
+
+  /* Vis et bilde i lightbox med fade-transition. */
+  const showImage = (i, isFirst) => {
     currentIdx = i;
     const fig = items[i];
     const img = fig.querySelector('img');
     const cap = fig.querySelector('figcaption')?.textContent || '';
-    lbImg.src = img.src;
-    lbImg.alt = img.alt || '';
+    const newSrc = img.src;
+    const newAlt = img.alt || '';
+
     lbCap.textContent = cap;
     lbCnt.textContent = `${String(i + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
-    lb.classList.add('open');
-    lb.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+
+    /* Forhåndslast naboer. */
+    preload(items[(i + 1) % items.length].querySelector('img').src);
+    preload(items[(i - 1 + items.length) % items.length].querySelector('img').src);
+
+    if (isFirst) {
+      /* Første åpning: bare sett src og la .open-klassen gjøre fade-in. */
+      lbImg.src = newSrc;
+      lbImg.alt = newAlt;
+      return;
+    }
+
+    /* Etterfølgende bilder: fade ut først, sett ny src, fade inn. */
+    stage.classList.add('swap');
+    const apply = () => {
+      lbImg.src = newSrc;
+      lbImg.alt = newAlt;
+      if (lbImg.complete && lbImg.naturalWidth > 0) {
+        requestAnimationFrame(() => stage.classList.remove('swap'));
+      } else {
+        lbImg.onload = () => {
+          stage.classList.remove('swap');
+          lbImg.onload = null;
+        };
+      }
+    };
+    /* Vent på fade-ut før vi bytter src. */
+    setTimeout(apply, 180);
+  };
+
+  const openLB = (i) => {
+    const wasOpen = lb.classList.contains('open');
+    if (!wasOpen) {
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    showImage(i, !wasOpen);
   };
 
   const closeLB = () => {
     lb.classList.remove('open');
+    stage.classList.remove('swap');
     lb.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     currentIdx = -1;
@@ -123,7 +171,7 @@
   const step = (n) => {
     if (currentIdx < 0) return;
     const i = (currentIdx + n + items.length) % items.length;
-    openLB(i);
+    showImage(i, false);
   };
 
   items.forEach((it, i) => it.addEventListener('click', () => openLB(i)));

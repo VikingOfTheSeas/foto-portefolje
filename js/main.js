@@ -56,12 +56,17 @@
     });
   }
 
-  /* ----- Reveal on scroll ----- */
+  /* ----- Reveal on scroll -----
+     NB: g-items inne i masonry-gallerier (.gallery-feature/-doc/-concept)
+     skal IKKE få reveal-klassen, fordi Safari maler transformerte
+     children utenfor sin CSS-column-boks. Det gjør at bilder havner
+     visuelt over neste seksjons tekst. */
+  const masonryItems = new Set($$('.gallery-feature .g-item, .gallery-doc .g-item, .gallery-concept .g-item'));
+  const galleryItems = $$('.g-item').filter(el => !masonryItems.has(el));
   const revealEls = [
     ...$$('.section-title, .lede, .intro-body p, .chapter-header, .chapter-title, .chapter-desc, .chapter-num'),
-    ...$$('.g-item'),
+    ...galleryItems,
     ...$$('.reflect, .lens-set-label, .video-frame'),
-    ...$$('.contact-title, .contact-mail, .contact-links, .contact-num'),
   ];
   revealEls.forEach(el => el.classList.add('reveal'));
 

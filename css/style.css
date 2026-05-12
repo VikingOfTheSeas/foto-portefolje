@@ -491,17 +491,24 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   column-gap: var(--gap);
   max-width: var(--max);
   margin: 0 auto;
+  /* Safari trenger eksplisitt overflow så transformerte children
+     ikke maler utenfor kolonneboksen. */
+  overflow: hidden;
 }
 .gallery-feature .g-item,
 .gallery-doc .g-item,
 .gallery-concept .g-item {
-  display: block;
+  display: inline-block;
   width: 100%;
   break-inside: avoid;
+  -webkit-column-break-inside: avoid;
   page-break-inside: avoid;
   margin: 0 0 var(--gap);
   aspect-ratio: auto;
   background: transparent;
+  /* Ingen transform her — Safari + CSS-columns + transform = bilder
+     som maler utenfor kolonneboksen og over teksten under. */
+  transform: none !important;
 }
 .gallery-feature .g-item img,
 .gallery-doc .g-item img,

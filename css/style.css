@@ -138,14 +138,26 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .nav-links {
   display: flex;
-  gap: 28px;
-  font-size: 13px;
-  letter-spacing: 0.06em;
+  gap: clamp(14px, 1.6vw, 24px);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  align-items: center;
 }
 .nav-links a {
   position: relative;
   padding: 6px 0;
   color: var(--ink-dim);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+.nav-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 400;
 }
 .nav-links a::after {
   content: "";
@@ -821,7 +833,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .chapter-num { font-size: 80px; line-height: 1; }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1200px) {
   .nav-links { display: none; }
   .nav-toggle { display: block; }
   .nav-links.open {
@@ -829,13 +841,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     position: absolute;
     top: 100%; left: 0; right: 0;
     flex-direction: column;
-    padding: 20px var(--pad);
-    background: rgba(13,12,10,0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    align-items: flex-start;
+    padding: 24px var(--pad);
+    background: rgba(13,12,10,0.97);
     border-bottom: 1px solid var(--line);
     gap: 14px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
   }
+  .nav-links.open a { font-size: 14px; padding: 8px 0; }
+}
+
+@media (max-width: 720px) {
 
   .gallery, .gallery-grid3, .gallery-lens {
     grid-template-columns: repeat(2, 1fr);

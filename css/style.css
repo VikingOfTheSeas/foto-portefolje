@@ -18,9 +18,9 @@
   --serif: "Fraunces", "Times New Roman", serif;
   --sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
 
-  --max: 1440px;
+  --max: 1680px;
   --pad: clamp(20px, 4vw, 60px);
-  --gap: clamp(12px, 1.6vw, 22px);
+  --gap: clamp(14px, 1.8vw, 26px);
 
   --t-fast: 0.25s cubic-bezier(.2,.7,.2,1);
   --t: 0.6s cubic-bezier(.2,.7,.2,1);
@@ -371,10 +371,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .chapter-header {
   max-width: var(--max);
-  margin: 0 auto clamp(40px, 6vw, 80px);
+  margin: 0 auto clamp(50px, 7vw, 100px);
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  gap: clamp(20px, 4vw, 60px);
+  grid-template-columns: minmax(120px, 220px) 1fr;
+  grid-template-rows: auto auto;
+  column-gap: clamp(20px, 4vw, 60px);
+  row-gap: clamp(8px, 1vw, 18px);
   align-items: end;
 }
 .chapter-num {
@@ -384,22 +386,28 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   line-height: 0.9;
   color: var(--accent);
   font-style: italic;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: end;
 }
 .chapter-title {
+  grid-column: 2;
+  grid-row: 1;
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(44px, 6vw, 90px);
   line-height: 1;
   letter-spacing: -0.02em;
-  margin-bottom: 8px;
 }
 .chapter-desc {
+  grid-column: 2;
+  grid-row: 2;
   font-family: var(--serif);
   font-style: italic;
   font-weight: 300;
   font-size: clamp(16px, 1.4vw, 20px);
   color: var(--ink-dim);
-  max-width: 620px;
+  max-width: 720px;
   line-height: 1.5;
 }
 
@@ -411,7 +419,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   margin: 0 auto;
   display: grid;
   gap: var(--gap);
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
 }
 .g-item {
   position: relative;
@@ -456,10 +464,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .g-item.pano   { aspect-ratio: 16 / 9; }
 
 /* Variants */
-.gallery-feature { grid-template-columns: repeat(4, 1fr); grid-auto-flow: dense; }
+.gallery-feature { grid-template-columns: repeat(3, 1fr); grid-auto-flow: dense; }
 .gallery-feature .g-item.span-2.tall { grid-row: span 2; aspect-ratio: 3 / 4; }
 
-.gallery-doc { grid-template-columns: repeat(4, 1fr); grid-auto-flow: dense; }
+.gallery-doc { grid-template-columns: repeat(3, 1fr); grid-auto-flow: dense; }
 
 .gallery-pano { grid-template-columns: 1fr; }
 .gallery-pano .g-item.pano { aspect-ratio: 21 / 9; }
@@ -468,17 +476,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .gallery-grid3 .g-item.span-2 { grid-column: span 2; }
 .gallery-grid3 .g-item.span-2.tall { grid-row: span 2; aspect-ratio: 3/4; }
 
-.gallery-concept { grid-template-columns: repeat(4, 1fr); grid-auto-flow: dense; }
+.gallery-concept { grid-template-columns: repeat(3, 1fr); grid-auto-flow: dense; }
 .gallery-concept .g-item.span-2.tall { grid-row: span 2; aspect-ratio: 3 / 4; }
 
-/* Single big image */
-.gallery-single { grid-template-columns: 1fr; max-width: 1100px; }
-.gallery-single .g-item.tall { aspect-ratio: 3/4; max-height: 84vh; }
+/* Single big image — fyll mer av siden */
+.gallery-single { grid-template-columns: 1fr; max-width: 1400px; }
+.gallery-single .g-item.tall { aspect-ratio: 4/5; max-height: 92vh; }
 .gallery-single .g-item.wide { aspect-ratio: 16/10; }
 
-/* Pair (before/after KI) */
+/* Pair (before/after KI) — fyll bredt */
 .gallery-pair { grid-template-columns: repeat(2, 1fr); }
-.gallery-pair .g-item { aspect-ratio: 3/2; }
+.gallery-pair .g-item { aspect-ratio: 4/3; }
 
 /* Lens comparison (3-up) */
 .lens-set {
@@ -538,10 +546,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   max-width: 780px;
 }
 
-/* Video embed */
+/* Video embed — full bredde, stor */
 .video-wrap {
   max-width: var(--max);
-  margin: 0 auto;
+  margin: 0 auto clamp(40px, 5vw, 70px);
 }
 .video-frame {
   position: relative;
@@ -550,7 +558,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   border-radius: 2px;
   overflow: hidden;
   background: #000;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.65);
 }
 .video-frame iframe {
   position: absolute;
@@ -558,6 +566,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+/* Liten label mellom video og stillbilder i Dokumentar */
+.doc-bilder-label {
+  max-width: var(--max);
+  margin: clamp(50px, 7vw, 90px) auto clamp(24px, 3vw, 36px);
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
 }
 
 /* ============================================================
@@ -722,12 +742,23 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    Responsive
    ============================================================ */
 @media (max-width: 1024px) {
-  .gallery { grid-template-columns: repeat(3, 1fr); }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .gallery-feature, .gallery-doc, .gallery-concept { grid-template-columns: repeat(2, 1fr); }
   .gallery-grid3 { grid-template-columns: repeat(2, 1fr); }
-  .gallery-concept { grid-template-columns: repeat(3, 1fr); }
+  .gallery-lens { grid-template-columns: repeat(3, 1fr); }
   .intro-grid { grid-template-columns: 1fr; gap: 24px; }
-  .chapter-header { grid-template-columns: 1fr; gap: 16px; }
-  .chapter-num { font-size: 80px; }
+  .chapter-header {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 12px;
+  }
+  .chapter-num,
+  .chapter-title,
+  .chapter-desc {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .chapter-num { font-size: 80px; line-height: 1; }
 }
 
 @media (max-width: 720px) {

@@ -463,11 +463,70 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .g-item.tall   { aspect-ratio: 3 / 4; }
 .g-item.pano   { aspect-ratio: 16 / 9; }
 
-/* Variants */
-.gallery-feature { grid-template-columns: repeat(3, 1fr); grid-auto-flow: dense; }
-.gallery-feature .g-item.span-2.tall { grid-row: span 2; aspect-ratio: 3 / 4; }
+/* ----- Masonry-galleries (blandet aspect ratio) -----
+   Bruker CSS columns slik at bilder med ulik høyde flyter inn
+   uten å lage store hull mellom rader. */
+.gallery-masonry {
+  display: block;
+  column-count: 3;
+  column-gap: var(--gap);
+  max-width: var(--max);
+  margin: 0 auto;
+  grid-template-columns: none;
+}
+.gallery-masonry .g-item {
+  display: block;
+  width: 100%;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin: 0 0 var(--gap);
+  aspect-ratio: auto;
+  background: transparent;
+}
+.gallery-masonry .g-item img {
+  position: static;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.gallery-masonry .g-item figcaption {
+  left: 12px;
+  bottom: 12px;
+}
 
-.gallery-doc { grid-template-columns: repeat(3, 1fr); grid-auto-flow: dense; }
+.gallery-feature,
+.gallery-doc,
+.gallery-concept {
+  display: block;
+  column-count: 3;
+  column-gap: var(--gap);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+.gallery-feature .g-item,
+.gallery-doc .g-item,
+.gallery-concept .g-item {
+  display: block;
+  width: 100%;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  margin: 0 0 var(--gap);
+  aspect-ratio: auto;
+  background: transparent;
+}
+.gallery-feature .g-item img,
+.gallery-doc .g-item img,
+.gallery-concept .g-item img {
+  position: static;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* span-2 og tall trengs ikke i masonry, men beholder caption-plassering */
+.gallery-feature .g-item.span-2,
+.gallery-doc .g-item.span-2,
+.gallery-concept .g-item.span-2 { grid-column: auto; }
 
 .gallery-pano { grid-template-columns: 1fr; }
 .gallery-pano .g-item.pano { aspect-ratio: 21 / 9; }
@@ -476,16 +535,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .gallery-grid3 .g-item.span-2 { grid-column: span 2; }
 .gallery-grid3 .g-item.span-2.tall { grid-row: span 2; aspect-ratio: 3/4; }
 
-.gallery-concept { grid-template-columns: repeat(3, 1fr); grid-auto-flow: dense; }
-.gallery-concept .g-item.span-2.tall { grid-row: span 2; aspect-ratio: 3 / 4; }
+/* Single big image — alltid 1 kolonne (høy spesifisitet for å unngå
+   at media-query for .gallery overrider) */
+.gallery.gallery-single { grid-template-columns: 1fr; max-width: 1100px; }
+.gallery-single .g-item { aspect-ratio: auto; }
+.gallery-single .g-item img { position: static; width: 100%; height: auto; max-height: 92vh; object-fit: contain; }
+.gallery-single .g-item.tall img { max-height: 92vh; }
+.gallery-single .g-item.wide img { max-height: 80vh; }
 
-/* Single big image — fyll mer av siden */
-.gallery-single { grid-template-columns: 1fr; max-width: 1400px; }
-.gallery-single .g-item.tall { aspect-ratio: 4/5; max-height: 92vh; }
-.gallery-single .g-item.wide { aspect-ratio: 16/10; }
-
-/* Pair (before/after KI) — fyll bredt */
-.gallery-pair { grid-template-columns: repeat(2, 1fr); }
+/* Pair (before/after KI) — alltid 2 kolonner på desktop */
+.gallery.gallery-pair { grid-template-columns: repeat(2, 1fr); }
 .gallery-pair .g-item { aspect-ratio: 4/3; }
 
 /* Lens comparison (3-up) */
@@ -743,9 +802,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    ============================================================ */
 @media (max-width: 1024px) {
   .gallery { grid-template-columns: repeat(2, 1fr); }
-  .gallery-feature, .gallery-doc, .gallery-concept { grid-template-columns: repeat(2, 1fr); }
+  .gallery-feature, .gallery-doc, .gallery-concept { column-count: 2; }
   .gallery-grid3 { grid-template-columns: repeat(2, 1fr); }
   .gallery-lens { grid-template-columns: repeat(3, 1fr); }
+  .gallery.gallery-single { grid-template-columns: 1fr; }
+  .gallery.gallery-pair { grid-template-columns: repeat(2, 1fr); }
   .intro-grid { grid-template-columns: 1fr; gap: 24px; }
   .chapter-header {
     grid-template-columns: 1fr;
@@ -777,15 +838,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     gap: 14px;
   }
 
-  .gallery, .gallery-grid3, .gallery-concept, .gallery-feature, .gallery-doc, .gallery-lens, .gallery-pair {
+  .gallery, .gallery-grid3, .gallery-lens {
     grid-template-columns: repeat(2, 1fr);
   }
+  .gallery.gallery-single { grid-template-columns: 1fr; }
+  .gallery.gallery-pair { grid-template-columns: repeat(2, 1fr); }
+  .gallery-feature, .gallery-doc, .gallery-concept { column-count: 2; }
+
   .g-item.span-2 { grid-column: span 2; }
   .g-item.span-2.tall { grid-row: auto; aspect-ratio: 4/3; }
   .gallery-grid3 .g-item.span-2.tall { grid-row: auto; aspect-ratio: 4/3; }
 
   .gallery-pano .g-item.pano { aspect-ratio: 16/9; }
-  .gallery-single .g-item.tall { max-height: none; }
+  .gallery-single .g-item img { max-height: none; }
 
   .reflect { padding: 24px; }
 
@@ -797,9 +862,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 
 @media (max-width: 480px) {
-  .gallery, .gallery-grid3, .gallery-concept, .gallery-feature, .gallery-doc, .gallery-lens, .gallery-pair {
+  .gallery, .gallery-grid3, .gallery-lens {
     grid-template-columns: 1fr;
   }
+  .gallery.gallery-pair { grid-template-columns: 1fr; }
+  .gallery-feature, .gallery-doc, .gallery-concept { column-count: 1; }
   .g-item.span-2 { grid-column: span 1; }
 }
 

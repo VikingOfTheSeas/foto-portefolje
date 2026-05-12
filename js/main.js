@@ -59,6 +59,7 @@
   const revealEls = [
     ...$$('.section-title, .lede, .intro-body p, .chapter-header, .chapter-title, .chapter-desc, .chapter-num'),
     ...$$('.g-item'),
+    ...$$('.reflect, .lens-set-label, .video-frame'),
     ...$$('.contact-title, .contact-mail, .contact-links, .contact-num'),
   ];
   revealEls.forEach(el => el.classList.add('reveal'));

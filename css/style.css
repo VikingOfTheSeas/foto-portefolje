@@ -738,6 +738,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  /* Egen stacking context så z-index på knappene aldri trumfes av
+     bildets transform-baserte context. */
+  isolation: isolate;
 }
 .lightbox.open {
   opacity: 1;
@@ -751,6 +754,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   align-items: center;
   justify-content: center;
   position: relative;
+  /* Eksplisitt lav z-index så bildet og dets transform-context aldri
+     paint-er over de absolutt-posisjonerte knappene. */
+  z-index: 1;
 }
 .lb-stage img {
   display: block;
@@ -769,8 +775,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .lb-close, .lb-prev, .lb-next {
   position: absolute;
-  /* z-index sikrer at knappene alltid ligger over bildet, ikke under */
-  z-index: 10;
+  /* Høy z-index så knappene alltid maler over bildet, uansett hvilken
+     stacking context bildet sin transform skaper. */
+  z-index: 50;
   color: var(--ink);
   font-size: 32px;
   line-height: 1;

@@ -187,11 +187,18 @@
     if (e.key === 'ArrowRight') step(1);
   });
 
-  /* Swipe on touch */
+  /* Swipe on touch — bare på bildet, ikke knappene. */
   let touchX = 0;
-  lb.addEventListener('touchstart', e => touchX = e.touches[0].clientX, { passive: true });
+  let touchOnButton = false;
+  lb.addEventListener('touchstart', e => {
+    /* Hvis fingeren starter på en knapp, ikke spor som swipe.
+       Da fyrer click-handleren normalt. */
+    touchOnButton = !!e.target.closest('button');
+    if (!touchOnButton) touchX = e.touches[0].clientX;
+  }, { passive: true });
   lb.addEventListener('touchend', e => {
+    if (touchOnButton) { touchOnButton = false; return; }
     const dx = e.changedTouches[0].clientX - touchX;
     if (Math.abs(dx) > 60) step(dx > 0 ? -1 : 1);
-  });
+  }, { passive: true });
 })();

@@ -767,16 +767,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   object-fit: contain;
   box-shadow: 0 50px 100px rgba(0,0,0,0.6);
   opacity: 0;
-  transform: scale(0.98);
-  transition: opacity 0.3s ease, transform 0.4s ease;
+  /* Ingen transform her. Safari iOS løfter transformerte elementer
+     til egne hardware-lag som kan male over absolutt-posisjonerte
+     knapper uavhengig av z-index. Bare opacity-fade. */
+  transition: opacity 0.25s ease;
 }
-.lightbox.open .lb-stage img { opacity: 1; transform: scale(1); }
-.lb-stage.swap img { opacity: 0; transform: scale(0.985); }
+.lightbox.open .lb-stage img { opacity: 1; }
+.lb-stage.swap img { opacity: 0; }
 
 .lb-close, .lb-prev, .lb-next {
-  position: absolute;
-  /* Høy z-index så knappene alltid maler over bildet, uansett hvilken
-     stacking context bildet sin transform skaper. */
+  position: fixed;
+  /* position: fixed gjør at knappene ligger i viewport-coordinate-systemet,
+     uavhengig av eventuell stacking-context fra parent. */
   z-index: 50;
   color: var(--ink);
   font-size: 32px;
@@ -787,7 +789,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   display: grid; place-items: center;
   background: rgba(13,12,10,0.78);
   -webkit-tap-highlight-color: transparent;
-  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+  /* Eget hardware-lag for Safari iOS. */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  transition: background var(--t-fast), border-color var(--t-fast);
 }
 .lb-close:hover, .lb-prev:hover, .lb-next:hover {
   background: var(--accent);

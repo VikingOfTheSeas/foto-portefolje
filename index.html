@@ -12,6 +12,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="css/style.css?v=20260513b">
+
+<script>
+  /* Sørger for at siden alltid åpnes på toppen, uansett om URL-en
+     har en hash (#ki, #konsept, etc.) eller om nettleseren prøver
+     å gjenopprette tidligere scroll-posisjon. Kjører før render. */
+  (function () {
+    try {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      if (location.hash) {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+    } catch (_) {}
+  })();
+</script>
 </head>
 <body>
 

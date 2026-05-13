@@ -6,8 +6,11 @@
   const $  = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
 
-  /* ----- Loader ----- */
+  /* ----- Loader + start på toppen ----- */
   window.addEventListener('load', () => {
+    /* Ekstra sikkerhet: hvis noe scroll har skjedd før vi rakk å
+       fjerne hash, scroll tilbake til topp før vi viser siden. */
+    window.scrollTo(0, 0);
     document.body.classList.add('loaded');
     setTimeout(() => $('#loader')?.classList.add('hidden'), 600);
   });

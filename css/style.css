@@ -769,14 +769,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 .lb-close, .lb-prev, .lb-next {
   position: absolute;
+  /* z-index sikrer at knappene alltid ligger over bildet, ikke under */
+  z-index: 10;
   color: var(--ink);
   font-size: 32px;
   line-height: 1;
   width: 56px; height: 56px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong);
   border-radius: 50%;
   display: grid; place-items: center;
-  background: rgba(13,12,10,0.6);
+  background: rgba(13,12,10,0.78);
+  -webkit-tap-highlight-color: transparent;
   transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
 }
 .lb-close:hover, .lb-prev:hover, .lb-next:hover {
@@ -871,10 +874,25 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .reflect { padding: 24px; }
 
   .hero-title .line.italic { padding-left: 30px; }
-  .lb-prev, .lb-next { width: 44px; height: 44px; font-size: 26px; }
+  /* Knappene må alltid være tydelige og klikkbare på mobil. Solid bakgrunn
+     med svak transparens og litt skygge så de skiller seg fra hvilket som
+     helst bilde under. */
+  .lb-close, .lb-prev, .lb-next {
+    background: rgba(13, 12, 10, 0.88);
+    border-color: rgba(245, 240, 230, 0.35);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  }
+  .lb-prev, .lb-next {
+    width: 48px; height: 48px;
+    font-size: 28px;
+  }
   .lb-prev { left: 10px; }
   .lb-next { right: 10px; }
-  .lb-close { top: 14px; right: 14px; }
+  .lb-close {
+    width: 44px; height: 44px;
+    font-size: 24px;
+    top: 14px; right: 14px;
+  }
 }
 
 @media (max-width: 480px) {
